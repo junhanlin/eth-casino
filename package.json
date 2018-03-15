@@ -15,7 +15,8 @@
     "karma-jasmine": "^0.3.8",
     "karma-junit-reporter": "^0.4.1",
     "protractor": "^4.0.9",
-    "truffle": "^4.1.3"
+    "truffle": "^4.1.3",
+    "truffle-hdwallet-provider": "^0.0.3"
   },
   "scripts": {
     "postinstall": "bower install && truffle compile",
