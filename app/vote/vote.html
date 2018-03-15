@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="jumbotron">
+        <h1>Vote</h1>
+        <p class="lead">Bet for your best number and win huge amounts of Ether</p>
+        <ul class="list-group">
+            <li class="list-group-item">Number of bets: {{numberOfBets}} ether</li>
+            <li class="list-group-item">Total ether bet: {{totalBet}} ether</li>
+            <li class="list-group-item">Minimum bet: {{minimumBet}}</li>
+            <li class="list-group-item">Max amount of bets: {{maxAmountOfBets}}</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2>Vote for the next number</h2>
+
+            <form>
+                <div class="form-group">
+                    <label>Your wallet address </label>
+                    <input type="text" class="form-control"  ng-model="walletAddress">
+                    
+                </div>
+                <div class="form-group">
+                    <label>How much Ether do you want to bet? </label>
+                    <input type="number" class="form-control" ng-model="bet">
+                    <small class="form-text text-muted">ether</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1">Which number do you want to vote?</label>
+                    <select class="form-control" ng-model="selectedNumber">
+                        <option ng-repeat="n in numbers">{{n}}</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" ng-click="submit()">Submit</button>
+            </form>
+
+        </div>
+    </div>
+
+</div>
