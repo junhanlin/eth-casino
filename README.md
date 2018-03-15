@@ -23,7 +23,6 @@ $ cp truffle.example.js truffle.js
 
 ```
 $ npm install
-$ bower install
 ```
 
 Development
