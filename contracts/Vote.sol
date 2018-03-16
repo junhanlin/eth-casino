@@ -64,24 +64,21 @@ contract Vote {
 
     // Sends the corresponding ether to each winner depending on the total bets
     function distributePrizes(uint256 numberWinner) public {
-        address[100] memory winners; // We have to create a temporary in memory array with fixed size
-        uint256 count = 0; // This is the count for the array of winners
+        lastBetWinners.length = 0; 
+       
         for (uint256 i = 0; i < players.length; i++) {
             address playerAddress = players[i];
             if (playerInfo[playerAddress].numberSelected == numberWinner) {
-                winners[count] = playerAddress;
-                count++;
+                lastBetWinners.push(playerAddress);
             }
             delete playerInfo[playerAddress]; // Delete all the players
         }
-        lastBetWinners = winners;
+        
         players.length = 0; // Delete all the players array
-        lastBetPrize = totalBet / winners.length; // How much each winner gets
+        lastBetPrize = totalBet / lastBetWinners.length; // How much each winner gets
 
-        for (uint256 j = 0; j < count; j++) {
-            if (winners[j] != address(0)) {// Check that the address in this fixed array is not empty
-            winners[j].transfer(lastBetPrize);
-            }
+        for (uint256 j = 0; j < lastBetWinners.length; j++) {
+            lastBetWinners[j].transfer(lastBetPrize);
         }
 
         totalBet = 0;

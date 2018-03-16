@@ -3,7 +3,7 @@
 angular.module('web3', [])
   .factory('web3Service', function () {
     var retVal = {
-      txSigningKey: ethereumjs.Buffer.Buffer.from('FILL IN YOUR PRIVATE KEY HERE!!!', 'hex')
+      txSigningKey: ethereumjs.Buffer.Buffer.from('ffffff', 'hex')
     };
     if (typeof web3 != 'undefined') {
       console.log("Development: Using web3 detected from external source like Metamask")
