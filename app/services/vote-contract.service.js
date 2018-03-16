@@ -6,7 +6,7 @@ angular.module('voteContract', ['web3'])
         var retVal = {};
         retVal.fetchContractInstance = function () {
             return $q(function (resolve, reject) {
-                $http.get("contracts/Casino.json")
+                $http.get("contracts/Vote.json")
                     .success(function (data) {
                         var json = data;
                         var contract = web3.eth.contract(json.abi);

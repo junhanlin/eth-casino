@@ -26,7 +26,7 @@
 
     "prestart": "npm install",
     "start": "http-server -a localhost -p 8000 -c-1 ./app",
-    "migrate": "truffle migrate --network ropsten && cp -r ./build/contracts ./app/contracts",
+    "migrate": "truffle migrate --reset --network ropsten && cp -a ./build/contracts/. ./app/contracts",
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js --single-run",

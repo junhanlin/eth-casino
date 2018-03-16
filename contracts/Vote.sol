@@ -1,5 +1,5 @@
 pragma solidity ^0.4.17;
-contract Casino {
+contract Vote {
    address public owner;
    uint256 public minimumBet;
    uint256 public totalBet;
@@ -16,7 +16,7 @@ contract Casino {
    // when distributing the prizes and restarting the game
    uint public constant LIMIT_AMOUNT_BETS = 100;
    
-   function Casino(uint256 _minimumBet) public {
+   function Vote(uint256 _minimumBet) public {
       owner = msg.sender;
       if (_minimumBet > 0) {
         minimumBet = _minimumBet;
