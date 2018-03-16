@@ -18,23 +18,11 @@ angular.module('voteContract', ['web3'])
                             bet: function (number, bet, account, cb) {
 
                                 if (typeof web3 != 'undefined') {
-
                                     contractInst.bet(number, {
                                         gas: 300000,
                                         from: account,
                                         value: web3Service.web3.toWei(bet, 'ether')
-                                    }, function (err, result) {
-                                        if (err) {
-                                            alert('Transaction failed!');
-                                            console.error(err);
-                                            return;
-                                        }
-                                        if (result) {
-                                            alert('Transaction done!');
-                                            console.log(result);
-
-                                        }
-                                    });
+                                    }, cb);
 
                                 } else {
                                     web3Service.web3.eth.getTransactionCount(account, function (err, latestNonce) {
