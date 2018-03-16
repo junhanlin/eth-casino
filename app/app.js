@@ -8,6 +8,8 @@ var app = angular.module('myApp', [
   ])
   .config(['$locationProvider', '$stateProvider', '$urlRouterProvider', function ($locationProvider, $stateProvider, $urlRouterProvider) {
 
+    
+
     $stateProvider
       .state({
         name: 'home',

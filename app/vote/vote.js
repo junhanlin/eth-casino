@@ -1,19 +1,21 @@
 'use strict';
 app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', function ($scope, web3Service, voteContractService) {
 
-    $scope.contractInst = null;
+    $scope.contractHandle = null;
     $scope.numbers = [];
     $scope.numberOfBets = null;
     $scope.totalBet = null;
     $scope.minimumBet = null;
     $scope.maxAmountOfBets = null;
+    $scope.lastBetWinners = [];
+    $scope.lastBetPrize = null;
 
     $scope.walletAddress = null;
     $scope.bet = null;
     $scope.selectedNumber = null;
 
     $scope.updateContractStatus = function () {
-        $scope.contractInst.numberOfBets(function (err, result) {
+        $scope.contractHandle.contractInst.numberOfBets(function (err, result) {
             if (err) {
                 console.error(err);
                 return;
@@ -24,75 +26,98 @@ app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', func
                 });
             }
         });
-        $scope.contractInst.totalBet(function (err, result) {
+        $scope.contractHandle.contractInst.totalBet(function (err, result) {
             if (err) {
                 console.error(err);
                 return;
             }
             if (result != null) {
                 $scope.$apply(function () {
-                    $scope.totalBet = parseFloat(web3Service.fromWei(result, 'ether'));
+                    $scope.totalBet = parseFloat(web3Service.web3.fromWei(result, 'ether'));
                 });
             }
         });
-        $scope.contractInst.minimumBet(function (err, result) {
+        $scope.contractHandle.contractInst.minimumBet(function (err, result) {
             if (err) {
                 console.error(err);
                 return;
             }
             if (result != null) {
                 $scope.$apply(function () {
-                    $scope.minimumBet = parseFloat(web3Service.fromWei(result, 'ether'));
+                    $scope.minimumBet = parseFloat(web3Service.web3.fromWei(result, 'ether'));
                 });
             }
         });
-        $scope.contractInst.maxAmountOfBets(function (err, result) {
+
+        $scope.contractHandle.contractInst.lastBetPrize(function (err, result) {
             if (err) {
                 console.error(err);
                 return;
             }
             if (result != null) {
                 $scope.$apply(function () {
-                    $scope.maxAmountOfBets = parseInt(result);
+                    $scope.lastBetPrize = parseFloat(web3Service.web3.fromWei(result, 'ether'));
                 });
             }
         });
-        
+        $scope.contractHandle.contractInst.getLastBetWinnerCount(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    var count = parseInt(result);
+                    $scope.lastBetWinners = Array.apply(0, Array(count));
+                    $scope.lastBetWinners.forEach(function (n, idx) {
+                        $scope.contractHandle.contractInst.lastBetWinners(idx, function (err, winner) {
+                            if (err) {
+                                console.error(err);
+                                return;
+                            }
+                            $scope.$apply(function () {
+                                $scope.lastBetWinners[idx] = winner;
+                            });
+                        });
+                    });
+                });
+            }
+        });
+
+
     };
 
-    $scope.submit = function(){
-        if(!$scope.walletAddress){
+    $scope.submit = function () {
+        if (!$scope.walletAddress) {
             alert('Wallet address is required');
             return;
         }
-        if($scope.bet == null){
+        if ($scope.bet == null) {
             alert('Bet is required');
             return;
         }
-        if($scope.bet < $scope.minimumBet){
+        if ($scope.bet < $scope.minimumBet) {
             alert('You must bet more than the minimum');
         }
-        if($scope.selectedNumber == null){
+        if ($scope.selectedNumber == null) {
             alert('Number not selected');
             return;
         }
 
-        $scope.contractInst.bet($scope.selectedNumber, {
-            gas: 300000,
-            from: $scope.walletAddress,
-            value: web3Service.toWei($scope.bet, 'ether')
-         }, function(err, result) {
+        $scope.contractHandle.bet($scope.selectedNumber, $scope.bet, $scope.walletAddress, function (err, result) {
             if (err) {
                 alert('Transaction failed!');
                 console.error(err);
                 return;
             }
-            if(result){
+            if (result) {
                 alert('Transaction done!');
                 console.log(result);
-                
+
             }
-         })
+        });
+
+
 
 
 
@@ -103,14 +128,14 @@ app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', func
             return idx + 1;
         });
 
-        if(web3Service.eth && web3Service.eth.accounts && web3Service.eth.accounts.length > 0){
+        if (web3Service.web3.eth && web3Service.web3.eth.accounts && web3Service.web3.eth.accounts.length > 0) {
             // current user's address can be injected by Metamask
-            $scope.walletAddress = web3Service.eth.accounts[0];
+            $scope.walletAddress = web3Service.web3.eth.accounts[0];
         }
-        
 
-        voteContractService.fetchContractInstance().then(function (result) {
-            $scope.contractInst = result;
+
+        voteContractService.fetchContractHandle().then(function (result) {
+            $scope.contractHandle = result;
             $scope.updateContractStatus();
 
         }, function (err) {

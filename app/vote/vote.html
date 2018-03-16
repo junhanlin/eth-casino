@@ -3,11 +3,21 @@
         <h1>Vote</h1>
         <p class="lead">Bet for your best number and win huge amounts of Ether</p>
         <ul class="list-group">
+            <li class="list-group-item">Contract at: {{contractHandle.contractInst.address}}</li>
             <li class="list-group-item">Number of bets: {{numberOfBets}} ether</li>
             <li class="list-group-item">Total ether bet: {{totalBet}} ether</li>
-            <li class="list-group-item">Minimum bet: {{minimumBet}}</li>
-            <li class="list-group-item">Max amount of bets: {{maxAmountOfBets}}</li>
+            <li class="list-group-item">Minimum bet: {{minimumBet}} ether</li>
         </ul>
+    </div>
+
+    <div class="card" ng-if="lastBetPrize">
+        <div class="card-body">
+            <h2>Average prize for last bet: {{lastBetPrize}} ether</h2>
+            <p class="lead">Winners</p>
+            <ul class="list-group" ng-repeat="winner in lastBetWinners track by $index">
+                <li class="list-group-item">{{winner}}</li>
+            </ul>
+        </div>
     </div>
 
     <div class="card">
@@ -17,12 +27,12 @@
             <form>
                 <div class="form-group">
                     <label>Your wallet address </label>
-                    <input type="text" class="form-control"  ng-model="walletAddress">
-                    
+                    <input type="text" class="form-control" ng-model="walletAddress">
+
                 </div>
                 <div class="form-group">
                     <label>How much Ether do you want to bet? </label>
-                    <input type="number" class="form-control" ng-model="bet">
+                    <input type="number" class="form-control" ng-model="bet" step="0.001">
                     <small class="form-text text-muted">ether</small>
                 </div>
                 <div class="form-group">
