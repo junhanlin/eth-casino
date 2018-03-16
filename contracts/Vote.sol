@@ -1,7 +1,7 @@
 pragma solidity ^0.4.17;
 contract Vote {
     address public owner;
-    uint256 public minimumBet;
+    uint256 public minimumBet = 100 finney;
     uint256 public totalBet;
     uint256 public numberOfBets;
     address[] public players;
@@ -17,15 +17,8 @@ contract Vote {
     // when distributing the prizes and restarting the game
     uint public constant LIMIT_AMOUNT_BETS = 100;
 
-    function Vote(uint256 _minimumBet) public {
+    function Vote() public {
         owner = msg.sender;
-        if (_minimumBet > 0) {
-            minimumBet = _minimumBet;
-        }else {
-            minimumBet = 100000000000000000;
-        }
-        
-        
     }
     function kill() public {
         if (msg.sender == owner) {

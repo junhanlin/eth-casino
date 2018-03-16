@@ -1,6 +1,10 @@
-var Casino = artifacts.require("./Vote.sol");
+var Vote = artifacts.require("./Vote.sol");
+var Raffle = artifacts.require("./Raffle.sol");
 module.exports = function (deployer) {
-    deployer.deploy(Casino,web3.toWei(0.1, 'ether'), {
+    deployer.deploy(Vote, {
+        gas: 3000000
+    });
+    deployer.deploy(Raffle, {
         gas: 3000000
     });
 };

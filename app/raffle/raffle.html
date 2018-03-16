@@ -1,1 +1,80 @@
-<h1>Raffle</h1>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Raffle</h1>
+        <ul class="list-group">
+            <li class="list-group-item">Contract at: {{contractHandle.contractInst.address}}</li>
+            <li class="list-group-item">Number of bets: {{numberOfBets}}</li>
+            <li class="list-group-item">Total ether bet: {{totalBet}} ether</li>
+            <li class="list-group-item">Minimum bet: {{minimumBet}} ether</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2>Realtime Raffle Winners</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Winner</th>
+                        <th scope="col">Prize</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="payout in payouts track by $index">
+                        <th scope="row">{{$index + 1}}</th>
+                        <td>{{payout.winner}}</td>
+                        <td>{{payout.prize}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body">
+            <h2>Realtime Raffle Players</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Player</th>
+                        <th scope="col">Bet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="player in players track by $index">
+                        <th scope="row">{{$index + 1}}</th>
+                        <td>{{player.address}}</td>
+                        <td>{{player.bet}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <br/>
+    <div class="card">
+        <div class="card-body">
+            <h2>Buy Your Fortune</h2>
+
+            <form>
+                <div class="form-group">
+                    <label>Your wallet address </label>
+                    <input type="text" class="form-control" ng-model="walletAddress">
+
+                </div>
+                <div class="form-group">
+                    <label>How much Ether do you want to bet? </label>
+                    <input type="number" class="form-control" ng-model="bet" step="0.001">
+                    <small class="form-text text-muted" ng-if="bet">Probability: {{(bet/(bet + totalBet) * 100) | number : 3}}%</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" ng-click="submit()">Submit</button>
+            </form>
+
+        </div>
+    </div>
+
+</div>

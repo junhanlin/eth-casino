@@ -4,7 +4,8 @@
 var app = angular.module('myApp', [
     'ui.router',
     'web3',
-    'voteContract'
+    'voteContract',
+    'raffleContract'
   ])
   .config(['$locationProvider', '$stateProvider', '$urlRouterProvider', function ($locationProvider, $stateProvider, $urlRouterProvider) {
 
