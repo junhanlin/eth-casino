@@ -31,7 +31,7 @@ app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', func
             }
             if (result != null) {
                 $scope.$apply(function () {
-                    $scope.totalBet = parseFloat(web3.fromWei(result, 'ether'));
+                    $scope.totalBet = parseFloat(web3Service.fromWei(result, 'ether'));
                 });
             }
         });
@@ -42,7 +42,7 @@ app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', func
             }
             if (result != null) {
                 $scope.$apply(function () {
-                    $scope.minimumBet = parseFloat(web3.fromWei(result, 'ether'));
+                    $scope.minimumBet = parseFloat(web3Service.fromWei(result, 'ether'));
                 });
             }
         });
@@ -80,7 +80,7 @@ app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', func
         $scope.contractInst.bet($scope.selectedNumber, {
             gas: 300000,
             from: $scope.walletAddress,
-            value: web3.toWei($scope.bet, 'ether')
+            value: web3Service.toWei($scope.bet, 'ether')
          }, function(err, result) {
             if (err) {
                 alert('Transaction failed!');
@@ -103,9 +103,9 @@ app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', func
             return idx + 1;
         });
 
-        if(web3.eth && web3.eth.accounts && web3.eth.accounts.length > 0){
+        if(web3Service.eth && web3Service.eth.accounts && web3Service.eth.accounts.length > 0){
             // current user's address can be injected by Metamask
-            $scope.walletAddress = web3.eth.accounts[0];
+            $scope.walletAddress = web3Service.eth.accounts[0];
         }
         
 
