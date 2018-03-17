@@ -61,7 +61,7 @@ contract Dice {
     function generateDiceNumber(string key) private view returns (uint[]) {
         uint[] memory privateSeq = new uint[](roundNumber);
         uint l = publicSeq.length;
-        uint n = uint(sha256(key));
+        uint n = uint(sha256(key)); 
         for (uint i = 0; i < roundNumber; i++) {
             privateSeq[i] = publicSeq[n % l];
             n /= l;
@@ -228,8 +228,6 @@ contract Dice {
     function getPublicSeqLength() public constant returns (uint256) {
         return publicSeq.length;
     }
-    function sha256ToUInt(string key) public constant returns (uint) {
-        return uint(sha256(key));
-    }
+    
 
 }

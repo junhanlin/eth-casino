@@ -74,8 +74,8 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
         return !$scope.shouldWait() && $scope.roundEnded && !$scope.justConfirmed && $scope.thisTurn == $scope.walletAddress;
     };
 
-    $scope.mustEndGame = function(){
-        return !$scope.shouldWait() && $scope.gameEnded && $scope.verified == 1;
+    $scope.mustEndGame = function () {
+        return $scope.gameEnded && $scope.verified == 1 && $scope.player2.addr == $scope.walletAddress;
     };
 
 
@@ -307,7 +307,17 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
                 });
             }
         });
-
+        $scope.contractHandle.contractInst.verified(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    $scope.verified = parseInt(result);
+                });
+            }
+        });
 
         // $scope.contractHandle.contractInst.minimumBet(function (err, result) {
         //     if (err) {
@@ -372,23 +382,15 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
     };
 
     $scope.calcPrivateSeq = function (cb) {
-        
-        $scope.contractHandle.contractInst.sha256ToUInt($scope.privateKey, function (err, N) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            if (N != null) {
-                var privateSeq = Array.apply(0, Array($scope.roundNumber));
-                var l = $scope.publicSeq.length;
-                var n = parseInt(N)
-                for (var i = 0; i < 50; i++) {
-                    privateSeq[i] = $scope.publicSeq[n % l];
-                    n /= l;
-                }
-                cb(privateSeq);
-            }
-        });
+
+        var privateSeq = Array.apply(0, Array($scope.roundNumber));
+        var l = $scope.publicSeq.length;
+        var n = new BigNumber(CryptoJS.SHA256($scope.privateKey).toString(),16).toNumber();
+        for (var i = 0; i < 50; i++) {
+            privateSeq[i] = $scope.publicSeq[n % l];
+            n /= l;
+        }
+        cb(privateSeq);
     };
     $scope.showCurrRoundDiceNum = function () {
         $scope.calcPrivateSeq(function (privateSeq) {
@@ -429,7 +431,7 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
         });
     }
     $scope.endGame = function () {
-        $scope.contractHandle.endGame($scope.privateKey,$scope.walletAddress, function (err, result) {
+        $scope.contractHandle.endGame($scope.privateKey, $scope.walletAddress, function (err, result) {
             if (err) {
                 alert('Transaction failed!');
                 console.error(err);
