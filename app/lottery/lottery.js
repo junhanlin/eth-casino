@@ -17,6 +17,8 @@ app.controller('LotteryCtrl', ['$scope', 'web3Service', 'lotteryContractService'
     $scope.selectedWhiteNumbers = null;
     $scope.selectedPowerNumber = null;
 
+    $scope.winningNumberJson = null;
+
     $scope.updateContractStatus = function () {
         $scope.contractHandle.contractInst.getPlayersCount(function (err, result) {
             if (err) {
@@ -104,7 +106,7 @@ app.controller('LotteryCtrl', ['$scope', 'web3Service', 'lotteryContractService'
                             });
                         });
 
-                        Array.apply(0, Array(6)).forEach(function (x,numOrder) {
+                        Array.apply(0, Array(6)).forEach(function (x, numOrder) {
                             $scope.contractHandle.contractInst.bets(idx, numOrder, function (err, number) {
                                 if (err) {
                                     console.error(err);
@@ -178,6 +180,24 @@ app.controller('LotteryCtrl', ['$scope', 'web3Service', 'lotteryContractService'
 
 
     }
+    $scope.generateWinner = function () {
+        if ($scope.winningNumberJson == null) {
+            alert('Winning number not selected');
+            return;
+        }
+        $scope.contractHandle.generateWinner(JSON.parse($scope.winningNumberJson), $scope.walletAddress, function (err, result) {
+            if (err) {
+                alert('Transaction failed!');
+                console.error(err);
+                return;
+            }
+            if (result) {
+                alert('Transaction done!');
+                console.log(result);
+
+            }
+        });
+    };
 
     $scope.init = function () {
         $scope.allWhiteNumbers = Array.apply(0, Array(69)).map(function (n, idx) {

@@ -51,7 +51,24 @@ angular.module('lotteryContract', ['web3'])
 
 
 
-                            }
+                            },
+                            generateWinner: function (numbers, account, cb) {
+
+                                if (typeof web3 != 'undefined') {
+                                    contractInst.generateWinner(numbers, {
+                                        gas: 3600000,
+                                        from: account,
+                                        value: web3Service.web3.toWei(0, 'ether')
+                                    }, cb);
+
+                                } else {
+                                    
+                                }
+
+
+
+
+                            },
                         });
                     })
                     .error(function (err) {

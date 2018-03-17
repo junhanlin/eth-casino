@@ -13,6 +13,7 @@ app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', func
     $scope.walletAddress = null;
     $scope.bet = null;
     $scope.selectedNumber = null;
+    $scope.selectedWinningNumber = null;
 
     $scope.updateContractStatus = function () {
         $scope.contractHandle.contractInst.numberOfBets(function (err, result) {
@@ -122,6 +123,24 @@ app.controller('VoteCtrl', ['$scope', 'web3Service', 'voteContractService', func
 
 
     }
+    $scope.distributePrizes = function () {
+        if ($scope.selectedWinningNumber == null) {
+            alert('Winning number not selected');
+            return;
+        }
+        $scope.contractHandle.distributePrizes(parseInt($scope.selectedWinningNumber), $scope.walletAddress, function (err, result) {
+            if (err) {
+                alert('Transaction failed!');
+                console.error(err);
+                return;
+            }
+            if (result) {
+                alert('Transaction done!');
+                console.log(result);
+
+            }
+        });
+    };
 
     $scope.init = function () {
         $scope.numbers = Array.apply(0, Array(10)).map(function (n, idx) {

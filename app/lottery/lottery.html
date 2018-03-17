@@ -71,7 +71,7 @@
                     <select class="form-control" style="height: 30rem;" ng-model="selectedWhiteNumbers" multiple>
                         <option ng-repeat="n in allWhiteNumbers">{{n}}</option>
                     </select>
-                    
+
                 </div>
                 <div class="form-group">
                     <label>Select power number</label>
@@ -80,9 +80,27 @@
                     </select>
                     <small class="form-text text-muted" ng-if="selectedNumbers">{{selectedPowerNumber}}</small>
                 </div>
-                <small class="form-text text-muted" >{{getSelection()}}</small>
+                <small class="form-text text-muted">{{getSelection()}}</small>
                 <button type="submit" class="btn btn-primary" ng-click="submit()">Submit</button>
             </form>
+
+        </div>
+    </div>
+
+    <br/>
+    <div class="card">
+        <div class="card-body">
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">Distribute Prize!</h4>
+                <p>
+                    <div class="form-group">
+                        <input type="text" class="form-control" ng-model="winningNumberJson">
+                        
+                    </div>
+                </p>
+                <hr>
+                <button type="submit" class="btn btn-success" ng-click="generateWinner()">Submit</button>
+            </div>
 
         </div>
     </div>

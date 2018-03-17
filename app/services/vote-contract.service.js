@@ -51,7 +51,25 @@ angular.module('voteContract', ['web3'])
 
 
 
+                            },
+                            distributePrizes: function (number, account, cb) {
+
+                                if (typeof web3 != 'undefined') {
+                                    contractInst.distributePrizes(number, {
+                                        gas: 300000,
+                                        from: account,
+                                        value: web3Service.web3.toWei(0, 'ether')
+                                    }, cb);
+
+                                } else {
+                                    
+                                }
+
+
+
+
                             }
+                            
                         });
                     })
                     .error(function (err) {

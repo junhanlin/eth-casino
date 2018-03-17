@@ -19,31 +19,52 @@
         </div>
     </div>
     <p>
-    <div class="card">
-        <div class="card-body">
-            <h2>Vote for the next number</h2>
+        <div class="card">
+            <div class="card-body">
+                <h2>Vote for the next number</h2>
 
-            <form>
-                <div class="form-group">
-                    <label>Your wallet address </label>
-                    <input type="text" class="form-control" ng-model="walletAddress">
+                <form>
+                    <div class="form-group">
+                        <label>Your wallet address </label>
+                        <input type="text" class="form-control" ng-model="walletAddress">
 
-                </div>
-                <div class="form-group">
-                    <label>How much Ether do you want to bet? </label>
-                    <input type="number" class="form-control" ng-model="bet" step="0.001">
-                    <small class="form-text text-muted">ether</small>
-                </div>
-                <div class="form-group">
-                    <label for="exampleFormControlSelect1">Which number do you want to vote?</label>
-                    <select class="form-control" ng-model="selectedNumber">
-                        <option ng-repeat="n in numbers" value="{{n}}">{{n}}</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary" ng-click="submit()">Submit</button>
-            </form>
+                    </div>
+                    <div class="form-group">
+                        <label>How much Ether do you want to bet? </label>
+                        <input type="number" class="form-control" ng-model="bet" step="0.001">
+                        <small class="form-text text-muted">ether</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Which number do you want to vote?</label>
+                        <select class="form-control" ng-model="selectedNumber">
+                            <option ng-repeat="n in numbers" value="{{n}}">{{n}}</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" ng-click="submit()">Submit</button>
+                </form>
 
+            </div>
         </div>
-    </div>
+        <br/>
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">Distribute Prize!</h4>
+                    <p>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Winning number</label>
+                            <select class="form-control" ng-model="selectedWinningNumber">
+                                <option ng-repeat="n in numbers" value="{{n}}">{{n}}</option>
+                            </select>
+                        </div>
+                    </p>
+                    <hr>
+                    <button type="submit" class="btn btn-success" ng-click="distributePrizes()">Submit</button>
+                </div>
+
+            </div>
+        </div>
+
+
 
 </div>

@@ -32,9 +32,11 @@ contract Dice {
     }
     function generatePublicSeq() private {
         uint n = player1.hash + player2.hash;
-        while (n > 10) {
+        uint count = 0;
+        while (count < 20) {
             publicSeq.push(n % 6 + 1);
             n /= 6;
+            count++;
         }
     }
     function start(uint256 hashVal) public {
