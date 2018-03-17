@@ -5,7 +5,8 @@ var app = angular.module('myApp', [
     'ui.router',
     'web3',
     'voteContract',
-    'raffleContract'
+    'raffleContract',
+    'lotteryContract'
   ])
   .config(['$locationProvider', '$stateProvider', '$urlRouterProvider', function ($locationProvider, $stateProvider, $urlRouterProvider) {
 

@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Which number do you want to vote?</label>
                     <select class="form-control" ng-model="selectedNumber">
-                        <option ng-repeat="n in numbers">{{n}}</option>
+                        <option ng-repeat="n in numbers" value="{{n}}">{{n}}</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary" ng-click="submit()">Submit</button>

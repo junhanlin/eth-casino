@@ -1,1 +1,90 @@
-<h1>Lottery</h1>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Lottery</h1>
+        <ul class="list-group">
+            <li class="list-group-item">Contract at: {{contractHandle.contractInst.address}}</li>
+            <li class="list-group-item">Number of bets: {{numberOfBets}}</li>
+            <li class="list-group-item">Total ether bet: {{totalBet}} ether</li>
+            <li class="list-group-item">Minimum bet: {{minimumBet}} ether</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2>Realtime Lottery Winners</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Winner</th>
+                        <th scope="col">Prize</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="payout in payouts track by $index">
+                        <th scope="row">{{$index + 1}}</th>
+                        <td>{{payout.winner}}</td>
+                        <td>{{payout.prize}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br/>
+    <div class="card">
+        <div class="card-body">
+            <h2>Realtime Lottery Players</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Player</th>
+                        <th scope="col">Bet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="player in players track by $index">
+                        <th scope="row">{{$index + 1}}</th>
+                        <td>{{player.address}}</td>
+                        <td>{{player.bet}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <br/>
+    <div class="card">
+        <div class="card-body">
+            <h2>Buy a lottery</h2>
+
+            <form>
+                <div class="form-group">
+                    <label>Your wallet address </label>
+                    <input type="text" class="form-control" ng-model="walletAddress">
+
+                </div>
+                <div class="form-group">
+                    <label>Selecte 5 white numbers</label>
+                    <small class="form-text text-muted" ng-if="selectedWhiteNumbers">{{selectedWhiteNumbers}}</small>
+                    <select class="form-control" style="height: 30rem;" ng-model="selectedWhiteNumbers" multiple>
+                        <option ng-repeat="n in allWhiteNumbers">{{n}}</option>
+                    </select>
+                    
+                </div>
+                <div class="form-group">
+                    <label>Select power number</label>
+                    <select class="form-control" ng-model="selectedPowerNumber">
+                        <option ng-repeat="n in allPowerNumbers" value="{{n}}">{{n}}</option>
+                    </select>
+                    <small class="form-text text-muted" ng-if="selectedNumbers">{{selectedPowerNumber}}</small>
+                </div>
+                <small class="form-text text-muted" >{{getSelection()}}</small>
+                <button type="submit" class="btn btn-primary" ng-click="submit()">Submit</button>
+            </form>
+
+        </div>
+    </div>
+
+</div>
