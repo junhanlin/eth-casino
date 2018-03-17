@@ -1,7 +1,7 @@
 'use strict';
 app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', function ($scope, web3Service, diceContractService) {
 
-
+    
     $scope.contractHandle = null;
     $scope.privateKey = 'hello world';
     $scope.player1 = {
@@ -54,8 +54,9 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
 
 
     $scope.walletAddress = null;
-    $scope.raiseAmount = 0.3;
+
     $scope.diceNumber = null;
+    $scope.bb;
 
     $scope.isPlayer = function () {
         return ($scope.player1 && $scope.player1.addr == $scope.walletAddress) || ($scope.player2 && $scope.player2.addr == $scope.walletAddress);
@@ -112,8 +113,8 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
     };
 
     $scope.raise = function () {
-
-        $scope.contractHandle.raise($scope.raiseAmount, $scope.walletAddress, function (err, result) {
+        var raiseAmount = parseFloat( document.getElementById('raiseAmount').value);
+        $scope.contractHandle.raise(raiseAmount, $scope.walletAddress, function (err, result) {
             if (err) {
                 alert('Transaction failed!');
                 console.error(err);

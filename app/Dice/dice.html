@@ -7,7 +7,6 @@
             <li class="list-group-item">player1: {{player1}}</li>
             <li class="list-group-item">player2: {{player2}}</li>
             <li class="list-group-item">round ended: {{roundEnded}}</li>
-            <li class="list-group-item">raise amount: {{raiseAmount}}</li>
             <li class="list-group-item">public seq: {{publicSeq}}</li>
             <li class="list-group-item">round number: {{roundNumber}}</li>
             <li class="list-group-item">just confirmed: {{justConfirmed}}</li>
@@ -70,7 +69,7 @@
             <form>
                 <div class="form-group">
                     <label>How much do you want to bet?</label>
-                    <input type="text" class="form-control" ng-model="raiseAmount" step="0.01">
+                    <input type="number" class="form-control" id="raiseAmount" step="0.01">
                     <small class="form-text text-muted">You should raise at least {{howMuchToBet}} ether to call</small>
 
                 </div>
@@ -114,5 +113,5 @@
     </div>
     <div class="card" ng-if="shouldWait()">
 
-
+            
     </div>

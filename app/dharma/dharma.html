@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="jumbotron">
+        <h1>Dharma</h1>
+
+    </div>
+
+
+    <p>
+        <div class="card">
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <label>Your address </label>
+                        <input type="text" class="form-control" ng-model="walletAddress">
+
+                    </div>
+                    <div class="form-group">
+                        <label>How much do you want to deposit? </label>
+                        <input type="number" class="form-control" ng-model="depositAmount" step="0.001">
+                        <small class="form-text text-muted">ether</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary" ng-click="deposit()">Deposit</button>
+                </form>
+            </div>
+        </div>
+        <br/>
+        <div class="card">
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <label>Your address </label>
+                        <input type="text" class="form-control" ng-model="walletAddress">
+                    </div>
+                    <div class="form-group">
+                        <label>How much do you want to loan? </label>
+                        <input type="number" class="form-control" ng-model="loanAmount" step="0.001">
+                        <small class="form-text text-muted">ether</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary" ng-click="loan()">Loan</button>
+                </form>
+            </div>
+        </div>
+
+
+
+
+</div>

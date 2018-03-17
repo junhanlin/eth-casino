@@ -7,7 +7,8 @@ var app = angular.module('myApp', [
     'voteContract',
     'raffleContract',
     'lotteryContract',
-    'diceContract'
+    'diceContract',
+    'dharmaContract'
   ])
   .config(['$locationProvider', '$stateProvider', '$urlRouterProvider', function ($locationProvider, $stateProvider, $urlRouterProvider) {
 
@@ -76,6 +77,16 @@ var app = angular.module('myApp', [
           'nav-view': {
             templateUrl: 'dice/dice.html',
             controller: 'DiceCtrl'
+          }
+        }
+      })
+      .state({
+        name: 'dharma.dice',
+        url: '/dharma',
+        views: {
+          'nav-view': {
+            templateUrl: 'dharma/dharma.html',
+            controller: 'DharmaCtrl'
           }
         }
       });
