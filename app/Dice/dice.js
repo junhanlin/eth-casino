@@ -1,6 +1,7 @@
 'use strict';
 app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', function ($scope, web3Service, diceContractService) {
 
+
     $scope.contractHandle = null;
     $scope.privateKey = 'hello world';
     $scope.player1 = {
@@ -51,25 +52,65 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
     }
     */
 
-    
-    $scope.walletAddress = null;
 
-    $scope.isPlayer = function(){
-        return ($scope.player1 && $scope.player1.addr == $scope.walletAddress) ||  ($scope.player2 && $scope.player2.addr == $scope.walletAddress);
+    $scope.walletAddress = null;
+    $scope.raiseAmount = 0.3;
+    $scope.diceNumber = null;
+
+    $scope.isPlayer = function () {
+        return ($scope.player1 && $scope.player1.addr == $scope.walletAddress) || ($scope.player2 && $scope.player2.addr == $scope.walletAddress);
     }
-    $scope.isBystander = function(){
+    $scope.isBystander = function () {
         return !$scope.canStartGame() && !$scope.isPlayer();
     }
 
-    $scope.canStartGame = function(){
-        return $scope.numOfPlayers < 2;
+    $scope.canStartGame = function () {
+        return $scope.numOfPlayers < 2 && !$scope.isPlayer();
     };
-    
-    
+    $scope.canRaise = function () {
+        return !$scope.shouldWait() && !$scope.roundEnded && $scope.thisTurn == $scope.walletAddress;
+    };
+    $scope.canConfirm = function () {
+        return !$scope.shouldWait() && $scope.roundEnded && !$scope.justConfirmed && $scope.thisTurn == $scope.walletAddress;
+    };
 
-    $scope.join = function(){
-        var hashKey = '0x' + CryptoJS.SHA256($scope.privateKey).toString(CryptoJS.enc.Hex);
+    $scope.mustEndGame = function(){
+        return !$scope.shouldWait() && $scope.gameEnded && $scope.verified == 1;
+    };
+
+
+    $scope.shouldWait = function () {
+        if ($scope.canStartGame()) {
+            return false;
+        }
+        return ($scope.isPlayer() && $scope.numOfPlayers == 1) || // wait join
+            (!$scope.roundEnded && $scope.thisTurn != $scope.walletAddress) || // wait raising
+            ($scope.roundEnded && !$scope.justConfirmed && $scope.thisTurn != $scope.walletAddress) || // wait confirm
+            ($scope.gameEnded && $scope.verified == 1 && $scope.player1.addr == $scope.walletAddress) // wait end game
+        ;
+    };
+
+
+
+    $scope.join = function () {
+        var hashKey = "0x" + CryptoJS.SHA256($scope.privateKey).toString();
         $scope.contractHandle.start(hashKey, $scope.walletAddress, function (err, result) {
+            if (err) {
+                alert('Transaction failed!');
+                console.error(err);
+                return;
+            }
+            if (result) {
+                alert('Transaction done!');
+                console.log(result);
+
+            }
+        });
+    };
+
+    $scope.raise = function () {
+
+        $scope.contractHandle.raise($scope.raiseAmount, $scope.walletAddress, function (err, result) {
             if (err) {
                 alert('Transaction failed!');
                 console.error(err);
@@ -103,10 +144,34 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
             if (result != null) {
                 $scope.$apply(function () {
                     $scope.player1 = {
-                        addr: result.addr,
-                        hash: result.hash,
-                        diceFromPlayer: result.diceFromPlayer,
+                        addr: result[0],
+                        hash: result[1],
+                        diceFromPlayer: [],
                     };
+
+                    $scope.contractHandle.contractInst.getDiceFromPlayer1Length(function (err, result) {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        }
+                        if (result != null) {
+                            $scope.$apply(function () {
+                                var count = parseInt(result);
+                                $scope.player1.diceFromPlayer = Array.apply(null, Array(count));
+                                $scope.player1.diceFromPlayer.forEach(function (n, idx) {
+                                    $scope.contractHandle.contractInst.getDiceFromPlayer1(idx, function (err, diceFromPlayer1) {
+                                        if (err) {
+                                            console.error(err);
+                                            return;
+                                        }
+                                        $scope.$apply(function () {
+                                            $scope.player1.diceFromPlayer[idx] = diceFromPlayer1;
+                                        });
+                                    });
+                                });
+                            });
+                        }
+                    });
                 });
             }
         });
@@ -118,14 +183,122 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
             if (result != null) {
                 $scope.$apply(function () {
                     $scope.player2 = {
-                        addr: result.addr,
-                        hash: result.hash,
-                        diceFromPlayer: result.diceFromPlayer,
+                        addr: result[0],
+                        hash: result[1],
+                        diceFromPlayer: [],
                     };
+
+                    $scope.contractHandle.contractInst.getDiceFromPlayer2Length(function (err, result) {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        }
+                        if (result != null) {
+                            $scope.$apply(function () {
+                                var count = parseInt(result);
+                                $scope.player2.diceFromPlayer = Array.apply(null, Array(count));
+                                $scope.player2.diceFromPlayer.forEach(function (n, idx) {
+                                    $scope.contractHandle.contractInst.getDiceFromPlayer2(idx, function (err, diceFromPlayer2) {
+                                        if (err) {
+                                            console.error(err);
+                                            return;
+                                        }
+                                        $scope.$apply(function () {
+                                            $scope.player2.diceFromPlayer[idx] = diceFromPlayer2;
+                                        });
+                                    });
+                                });
+                            });
+                        }
+                    });
+
                 });
             }
         });
-        
+        $scope.contractHandle.contractInst.roundEnded(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    $scope.roundEnded = result;
+                });
+            }
+        });
+        $scope.contractHandle.contractInst.thisTurn(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    $scope.thisTurn = result;
+                });
+            }
+        });
+        $scope.contractHandle.contractInst.justConfirmed(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    $scope.justConfirmed = result;
+                });
+            }
+        });
+        $scope.contractHandle.contractInst.roundNumber(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    $scope.roundNumber = parseInt(result);
+                });
+            }
+        });
+
+
+        $scope.contractHandle.contractInst.getPublicSeqLength(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    var count = parseInt(result);
+                    $scope.publicSeq = Array.apply(null, Array(count));
+                    $scope.publicSeq.forEach(function (n, idx) {
+                        $scope.contractHandle.contractInst.publicSeq(idx, function (err, element) {
+                            if (err) {
+                                console.error(err);
+                                return;
+                            }
+                            $scope.$apply(function () {
+                                $scope.publicSeq[idx] = element;
+                            });
+                        });
+                    });
+                });
+            }
+        });
+        $scope.contractHandle.contractInst.howMuchToBet(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    $scope.howMuchToBet = parseFloat(web3Service.web3.fromWei(result, 'ether'))
+                });
+            }
+        });
+
+
+
+
         // $scope.contractHandle.contractInst.minimumBet(function (err, result) {
         //     if (err) {
         //         console.error(err);
@@ -139,32 +312,7 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
         // });
 
 
-        // $scope.contractHandle.contractInst.getPayoutsCount(function (err, result) {
-        //     if (err) {
-        //         console.error(err);
-        //         return;
-        //     }
-        //     if (result != null) {
-        //         $scope.$apply(function () {
-        //             var count = parseInt(result);
-        //             $scope.payouts = Array.apply(null, Array(count));
-        //             $scope.payouts.forEach(function (n, idx) {
-        //                 $scope.contractHandle.contractInst.payouts(idx, function (err, payout) {
-        //                     if (err) {
-        //                         console.error(err);
-        //                         return;
-        //                     }
-        //                     $scope.$apply(function () {
-        //                         $scope.payouts[idx] = {
-        //                             winner: payout[0],
-        //                             prize: parseFloat(web3Service.web3.fromWei(payout[1], 'ether'))
-        //                         };
-        //                     });
-        //                 });
-        //             });
-        //         });
-        //     }
-        // });
+
 
         // $scope.contractHandle.contractInst.getPlayersCount(function (err, result) {
         //     if (err) {
@@ -213,40 +361,52 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
 
     };
 
-    $scope.getSelection = function () {
-        var retVal = Array.apply(0, Array(6)).map(function (n, idx) {
-            return null;
+    $scope.calcPrivateSeq = function (cb) {
+
+        $scope.contractHandle.contractInst.sha256ToUInt($scope.privateKey, function (err, N) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (N != null) {
+                var privateSeq = Array.apply(0, Array($scope.roundNumber));
+                var l = $scope.publicSeq.length;
+                var n = parseInt(N)
+                for (var i = 0; i < 50; i++) {
+                    privateSeq[i] = $scope.publicSeq[n % l];
+                    n /= l;
+                }
+                cb(privateSeq);
+            }
         });
-        if ($scope.selectedWhiteNumbers) {
-            $scope.selectedWhiteNumbers.forEach(function (n, idx) {
-                retVal[idx] = parseInt(n);
+    };
+    $scope.showCurrRoundDiceNum = function () {
+        $scope.calcPrivateSeq(function (privateSeq) {
+            alert(privateSeq[$scope.roundNumber]);
+        });
+
+    };
+    $scope.confirm = function () {
+        $scope.calcPrivateSeq(function (privateSeq) {
+            var diceNum = parseInt(privateSeq[$scope.roundNumber]);
+            $scope.contractHandle.confirm(diceNum, $scope.walletAddress, function (err, result) {
+                if (err) {
+                    alert('Transaction failed!');
+                    console.error(err);
+                    return;
+                }
+                if (result) {
+                    alert('Transaction done!');
+                    console.log(result);
+
+                }
             });
-        }
-        if ($scope.selectedPowerNumber) {
-            retVal[5] = parseInt($scope.selectedPowerNumber);
-        }
-        return retVal;
+        });
 
     };
 
-    $scope.submit = function () {
-        if (!$scope.walletAddress) {
-            alert('Wallet address is required');
-            return;
-        }
-
-        if (!$scope.selectedWhiteNumbers || $scope.selectedWhiteNumbers.length != 5) {
-            alert('You must select 5 white number');
-            return;
-        }
-
-        if (!$scope.selectedPowerNumber) {
-            alert('You must select a power number');
-            return;
-        }
-
-
-        $scope.contractHandle.bet($scope.getSelection(), $scope.walletAddress, function (err, result) {
+    $scope.fold = function () {
+        $scope.contractHandle.fold($scope.walletAddress, function (err, result) {
             if (err) {
                 alert('Transaction failed!');
                 console.error(err);
@@ -255,14 +415,21 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
             if (result) {
                 alert('Transaction done!');
                 console.log(result);
-
             }
         });
-
-
-
-
-
+    }
+    $scope.endGame = function () {
+        $scope.contractHandle.endGame($scope.privateKey,$scope.walletAddress, function (err, result) {
+            if (err) {
+                alert('Transaction failed!');
+                console.error(err);
+                return;
+            }
+            if (result) {
+                alert('Transaction done!');
+                console.log(result);
+            }
+        });
     }
 
     $scope.init = function () {

@@ -67,7 +67,7 @@ angular.module('diceContract', ['web3'])
                                     console.log('Unimplemented!!!');
                                 }
                             },
-                            confirm: function (playerDicekey, account, cb) {
+                            confirm: function (playerDice, account, cb) {
 
                                 if (typeof web3 != 'undefined') {
                                     contractInst.confirm(playerDice, {

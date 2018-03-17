@@ -1,11 +1,17 @@
 <div class="container">
     <div class="jumbotron">
-        <h1>Lottery</h1>
+        <h1>Dice</h1>
         <ul class="list-group">
             <li class="list-group-item">Contract at: {{contractHandle.contractInst.address}}</li>
             <li class="list-group-item">Number of players: {{numOfPlayers}}</li>
-            <li class="list-group-item">Total ether bet: {{totalBet}} ether</li>
-            <li class="list-group-item">Minimum bet: {{minimumBet}} ether</li>
+            <li class="list-group-item">player1: {{player1}}</li>
+            <li class="list-group-item">player2: {{player2}}</li>
+            <li class="list-group-item">round ended: {{roundEnded}}</li>
+            <li class="list-group-item">raise amount: {{raiseAmount}}</li>
+            <li class="list-group-item">public seq: {{publicSeq}}</li>
+            <li class="list-group-item">round number: {{roundNumber}}</li>
+            <li class="list-group-item">just confirmed: {{justConfirmed}}</li>
+
         </ul>
     </div>
 
@@ -24,12 +30,20 @@
                     <label>Your private key</label>
                     <input type="text" class="form-control" ng-model="privateKey">
                 </div>
-                
+
             </form>
         </div>
     </div>
 
     <br/>
+    <div class="card" ng-if="isBystander()">
+        <div class="card-body">
+            <h2>You are bystander</h2>
+            <div class="alert alert-danger" role="alert">
+                Please wait until the game ended
+            </div>
+        </div>
+    </div>
     <div class="card" ng-if="canStartGame()">
         <div class="card-body">
             <h2>Take action</h2>
@@ -39,5 +53,59 @@
             <button type="button" class="btn btn-primary" ng-click="join()">Join</button>
         </div>
     </div>
+    <div class="card" ng-if="canRaise()">
+        <div class="card-body">
+            <h2>Take action</h2>
+            <div class="alert alert-primary" role="alert">
+                Please raise
+                <button type="button" class="btn btn-dark" ng-click="showCurrRoundDiceNum()">See dice number</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label>How much do you want to bet?</label>
+                    <input type="text" class="form-control" ng-model="raiseAmount" step="0.01">
+                    <small class="form-text text-muted">You should raise at least {{howMuchToBet}} ether to call</small>
 
-</div>
+                </div>
+
+            </form>
+            <button type="button" class="btn btn-primary" ng-click="raise()">Raise</button>
+            <button type="button" class="btn btn-warning" ng-click="fold()">Fold</button>
+            <button type="button" class="btn btn-danger" ng-click="endGame()">End Game</button>
+        </div>
+    </div>
+    <div class="card" ng-if="canConfirm()">
+        <div class="card-body">
+            <h2>Take action</h2>
+            <div class="alert alert-primary" role="alert">
+                Please confirm your dice number
+                <button type="button" class="btn btn-dark" ng-click="showCurrRoundDiceNum()">See dice number</button>
+            </div>
+
+            <button type="button" class="btn btn-primary" ng-click="confirm()">Confirm</button>
+        </div>
+    </div>
+    <div class="card" ng-if="canConfirm()">
+        <div class="card-body">
+            <h2></h2>
+            <div class="alert alert-danger" role="alert">
+                    Please end the game! (Another player has ended the game.)
+                    <button type="button" class="btn btn-danger" ng-click="endGame()">End Game</button>
+            </div>
+
+           
+        </div>
+    </div>
+    <div class="card" ng-if="shouldWait()">
+        <div class="card-body">
+            <div class="alert alert-warning" role="alert">
+                Please wait for another player
+            </div>
+
+
+        </div>
+    </div>
+    <div class="card" ng-if="shouldWait()">
+
+
+    </div>

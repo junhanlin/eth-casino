@@ -6,7 +6,7 @@ contract Dice {
     address public thisTurn;
     uint public numOfPlayers;
     uint public howMuchToBet = 0;
-    uint[] publicSeq;
+    uint[] public publicSeq;
     uint public roundNumber = 0;
     uint public totalBets = 0;
     uint public startTime;
@@ -18,6 +18,7 @@ contract Dice {
     bool public justConfirmed = false;
     uint[] privateSeqP1;
     uint[] privateSeqP2;
+    
     struct Player {
         address addr;
         uint hash;
@@ -31,7 +32,7 @@ contract Dice {
     }
     function generatePublicSeq() private {
         uint n = player1.hash + player2.hash;
-        while (n > 0) {
+        while (n > 10) {
             publicSeq.push(n % 6 + 1);
             n /= 6;
         }
@@ -170,6 +171,7 @@ contract Dice {
         } else {
             player1.addr.transfer(player1.betMadeThisRound + player2.betMadeThisRound);
         }
+        roundEnded = true;
         reset_round();
     }
     // single-hash value of privateKey of each player, and their accliamed inputs
@@ -208,4 +210,24 @@ contract Dice {
             player1.addr.transfer(totalBets);
         }
     }
+
+    function getDiceFromPlayer1Length() public constant returns (uint256) {
+        return player1.diceFromPlayer.length;
+    }
+    function getDiceFromPlayer1() public constant returns (uint[]) {
+        return player1.diceFromPlayer;
+    }
+    function getDiceFromPlayer2Length() public constant returns (uint256) {
+        return player2.diceFromPlayer.length;
+    }
+    function getDiceFromPlayer2() public constant returns (uint[]) {
+        return player2.diceFromPlayer;
+    }
+    function getPublicSeqLength() public constant returns (uint256) {
+        return publicSeq.length;
+    }
+    function sha256ToUInt(string key) public constant returns (uint) {
+        return uint(sha256(key));
+    }
+
 }
