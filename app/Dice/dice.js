@@ -296,7 +296,17 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
             }
         });
 
-
+        $scope.contractHandle.contractInst.gameEnded(function (err, result) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (result != null) {
+                $scope.$apply(function () {
+                    $scope.gameEnded = result;
+                });
+            }
+        });
 
 
         // $scope.contractHandle.contractInst.minimumBet(function (err, result) {
@@ -362,7 +372,7 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
     };
 
     $scope.calcPrivateSeq = function (cb) {
-
+        
         $scope.contractHandle.contractInst.sha256ToUInt($scope.privateKey, function (err, N) {
             if (err) {
                 console.error(err);

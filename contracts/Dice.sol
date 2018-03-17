@@ -216,14 +216,14 @@ contract Dice {
     function getDiceFromPlayer1Length() public constant returns (uint256) {
         return player1.diceFromPlayer.length;
     }
-    function getDiceFromPlayer1() public constant returns (uint[]) {
-        return player1.diceFromPlayer;
+    function getDiceFromPlayer1(uint idx) public constant returns (uint) {
+        return player1.diceFromPlayer[idx];
     }
     function getDiceFromPlayer2Length() public constant returns (uint256) {
         return player2.diceFromPlayer.length;
     }
-    function getDiceFromPlayer2() public constant returns (uint[]) {
-        return player2.diceFromPlayer;
+    function getDiceFromPlayer2(uint idx) public constant returns (uint) {
+        return player2.diceFromPlayer[idx];
     }
     function getPublicSeqLength() public constant returns (uint256) {
         return publicSeq.length;

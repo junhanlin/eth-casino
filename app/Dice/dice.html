@@ -11,6 +11,7 @@
             <li class="list-group-item">public seq: {{publicSeq}}</li>
             <li class="list-group-item">round number: {{roundNumber}}</li>
             <li class="list-group-item">just confirmed: {{justConfirmed}}</li>
+            <li class="list-group-item">game ended: {{gameEnded}}</li>
 
         </ul>
     </div>
@@ -85,7 +86,7 @@
             <button type="button" class="btn btn-primary" ng-click="confirm()">Confirm</button>
         </div>
     </div>
-    <div class="card" ng-if="canConfirm()">
+    <div class="card" ng-if="mustEndGame()">
         <div class="card-body">
             <h2></h2>
             <div class="alert alert-danger" role="alert">

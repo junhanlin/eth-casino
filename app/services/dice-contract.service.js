@@ -92,7 +92,8 @@ angular.module('diceContract', ['web3'])
                                 } else {
                                     console.log('Unimplemented!!!');
                                 }
-                            }
+                            },
+                            
                         });
                     })
                     .error(function (err) {
