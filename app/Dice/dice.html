@@ -36,7 +36,12 @@
             </form>
         </div>
     </div>
-
+    <br/>
+    <div class="row">
+        <div class="col">
+            <button type="button" class="btn btn-light" ng-click="refresh()">Refresh...</button>
+        </div>
+    </div>
     <br/>
     <div class="card" ng-if="isBystander()">
         <div class="card-body">
@@ -91,11 +96,11 @@
         <div class="card-body">
             <h2></h2>
             <div class="alert alert-danger" role="alert">
-                    Please end the game! (Another player has ended the game.)
-                    <button type="button" class="btn btn-danger" ng-click="endGame()">End Game</button>
+                Please end the game! (Another player has ended the game.)
+                <button type="button" class="btn btn-danger" ng-click="endGame()">End Game</button>
             </div>
 
-           
+
         </div>
     </div>
     <div class="card" ng-if="shouldWait()">

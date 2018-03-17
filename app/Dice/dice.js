@@ -90,6 +90,9 @@ app.controller('DiceCtrl', ['$scope', 'web3Service', 'diceContractService', func
         ;
     };
 
+    $scope.refresh = function(){
+        $scope.updateContractStatus();
+    };
 
 
     $scope.join = function () {
