@@ -81,7 +81,7 @@ var app = angular.module('myApp', [
         }
       })
       .state({
-        name: 'dharma.dice',
+        name: 'home.dharma',
         url: '/dharma',
         views: {
           'nav-view': {

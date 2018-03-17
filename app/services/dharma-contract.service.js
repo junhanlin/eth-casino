@@ -18,10 +18,10 @@ angular.module('dharmaContract', ['web3'])
                             makeDeposit: function (amount, account, cb) {
 
                                 if (typeof web3 != 'undefined') {
-                                    contractInst.makeDeposit(amount, {
+                                    contractInst.makeDeposit(0,{
                                         gas: 300000,
                                         from: account,
-                                        value: web3Service.web3.toWei(0, 'ether')
+                                        value: web3Service.web3.toWei(amount, 'ether')
                                     }, cb);
 
                                 } else {
@@ -32,10 +32,9 @@ angular.module('dharmaContract', ['web3'])
 
 
                             },
-                            makeDeposit: function (amount, account, cb) {
-
+                            makeLoan: function (amount, account, cb) {
                                 if (typeof web3 != 'undefined') {
-                                    contractInst.makeDeposit(amount, {
+                                    contractInst.makeLoan(web3Service.web3.toWei(amount, 'ether'), {
                                         gas: 300000,
                                         from: account,
                                         value: web3Service.web3.toWei(0, 'ether')
