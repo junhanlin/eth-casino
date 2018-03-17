@@ -71,7 +71,6 @@
                     <select class="form-control" style="height: 30rem;" ng-model="selectedWhiteNumbers" multiple>
                         <option ng-repeat="n in allWhiteNumbers">{{n}}</option>
                     </select>
-                    
                 </div>
                 <div class="form-group">
                     <label>Select power number</label>
@@ -80,7 +79,7 @@
                     </select>
                     <small class="form-text text-muted" ng-if="selectedNumbers">{{selectedPowerNumber}}</small>
                 </div>
-                <small class="form-text text-muted" >{{getSelection()}}</small>
+                <small class="form-text text-muted">{{getSelection()}}</small>
                 <button type="submit" class="btn btn-primary" ng-click="submit()">Submit</button>
             </form>
 

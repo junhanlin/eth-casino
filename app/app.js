@@ -67,6 +67,16 @@ var app = angular.module('myApp', [
             controller: 'LotteryCtrl'
           }
         }
+      })
+      .state({
+        name: 'home.dice',
+        url: '/dice',
+        views: {
+          'nav-view': {
+            templateUrl: 'dice/dice.html',
+            controller: 'DiceCtrl'
+          }
+        }
       });
 
     $urlRouterProvider.otherwise('/home/lobby');

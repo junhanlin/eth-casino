@@ -89,7 +89,9 @@ app.controller('LotteryCtrl', ['$scope', 'web3Service', 'lotteryContractService'
                 $scope.$apply(function () {
                     var count = parseInt(result);
                     $scope.players = Array.apply(0, Array(count)).map(function () {
-                        return {};
+                        return {
+                            numbers: []
+                        };
                     });
                     $scope.players.forEach(function (n, idx) {
                         $scope.contractHandle.contractInst.players(idx, function (err, address) {
@@ -102,15 +104,21 @@ app.controller('LotteryCtrl', ['$scope', 'web3Service', 'lotteryContractService'
                             });
                         });
 
-                        $scope.contractHandle.contractInst.bets(idx, function (err, bet) {
-                            if (err) {
-                                console.error(err);
-                                return;
-                            }
-                            $scope.$apply(function () {
-                                $scope.players[idx].bet = parseFloat(web3Service.web3.fromWei(bet, 'ether'));
+                        Array.apply(0, Array(6)).forEach(function (x,numOrder) {
+                            $scope.contractHandle.contractInst.bets(idx, numOrder, function (err, number) {
+                                if (err) {
+                                    console.error(err);
+                                    return;
+                                }
+                                $scope.$apply(function () {
+                                    $scope.players[idx].numbers[numOrder] = parseInt(number);
+                                });
                             });
                         });
+
+
+
+
                     });
                 });
             }
@@ -123,16 +131,16 @@ app.controller('LotteryCtrl', ['$scope', 'web3Service', 'lotteryContractService'
         var retVal = Array.apply(0, Array(6)).map(function (n, idx) {
             return null;
         });
-        if($scope.selectedWhiteNumbers){
-            $scope.selectedWhiteNumbers.forEach(function (n,idx) {
+        if ($scope.selectedWhiteNumbers) {
+            $scope.selectedWhiteNumbers.forEach(function (n, idx) {
                 retVal[idx] = parseInt(n);
             });
         }
-        if($scope.selectedPowerNumber){
+        if ($scope.selectedPowerNumber) {
             retVal[5] = parseInt($scope.selectedPowerNumber);
         }
         return retVal;
-        
+
     };
 
     $scope.submit = function () {
@@ -150,7 +158,7 @@ app.controller('LotteryCtrl', ['$scope', 'web3Service', 'lotteryContractService'
             alert('You must select a power number');
             return;
         }
-        
+
 
         $scope.contractHandle.bet($scope.getSelection(), $scope.walletAddress, function (err, result) {
             if (err) {

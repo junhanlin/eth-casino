@@ -59,7 +59,6 @@ contract Lottery {
     function reset() private {
         delete players;
         delete bets;
-        delete payouts;
     }
     function insert(uint loc, uint val) private {
         if (winningNumbers[loc] == 0){
@@ -118,6 +117,8 @@ contract Lottery {
     // Pick a winner with probability proportional to each player's betting amount
     function generateWinner(uint[6] testWinningNumbers) public {
         require(msg.sender == owner);
+        
+        delete payouts;
         if (testWinningNumbers.length != 6) {
             generateWinningNumbers();
         } else {
